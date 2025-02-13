@@ -1,6 +1,12 @@
 <script lang="ts">
-	import '../app.css';
-	let { children } = $props();
+  import "../app.css";
+  let { children } = $props();
+
+  import { QueryClient, QueryClientProvider } from "@tanstack/svelte-query";
+
+  const queryClient = new QueryClient();
 </script>
 
-{@render children()}
+<QueryClientProvider client={queryClient}>
+  {@render children()}
+</QueryClientProvider>

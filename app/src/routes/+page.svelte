@@ -8,9 +8,10 @@
     connectWallet,
   } from "$lib/wallet/helpers/connect-wallet";
   import { onMount } from "svelte";
+  import { queries } from "$lib/services/apiQueries";
 
   let showCreateModal = $state(false);
-  let events: EventType[] = $state([
+  let _events: EventType[] = $state([
     {
       id: "1",
       title: "Community Meetup",
@@ -40,6 +41,8 @@
     },
   ]);
 
+  const query = queries.getEvents();
+
   onMount(async () => {
     await checkWallet();
     const localStorageAddress = localStorage.getItem("rsvp-walletaddress");
@@ -64,9 +67,17 @@
     <h1 class="text-4xl font-bold text-center mb-8">Upcoming Events</h1>
 
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {#each events as event (event.id)}
-        <EventCard {event} />
-      {/each}
+      {#if $query.isLoading}
+        <p>Loading...</p>
+      {:else if $query.isError}
+        <p>Error: {$query.error.message}</p>
+      {:else if $query.isSuccess}
+        {#each $query.data as events}
+          {#each events as event (event.id)}
+            <EventCard {event} />
+          {/each}
+        {/each}
+      {/if}
     </div>
   </div>
 </div>

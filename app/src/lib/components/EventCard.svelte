@@ -12,7 +12,7 @@
   } = $props();
 
   function handleRSVP(eventId: string, action: "rsvp" | "confirm") {}
-  const isCreator = true;
+  const isCreator = false;
 
   let isOpen = $state(false);
   function onOpen() {
