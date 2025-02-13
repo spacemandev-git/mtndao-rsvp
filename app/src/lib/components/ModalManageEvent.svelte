@@ -1,6 +1,10 @@
 <script lang="ts">
   import type { EventType } from "$lib/types";
   import { truncateAddress } from "$lib/utils";
+  import IconCal from "./icons/IconCal.svelte";
+  import IconClock from "./icons/IconClock.svelte";
+  import IconPin from "./icons/IconPin.svelte";
+  import QrScanner from "./QrScanner.svelte";
 
   let {
     event,
@@ -29,19 +33,70 @@
     },
   ]);
 
+  let activeTab = $state<"details" | "scanner">("scanner");
+
+  let solanaAddress = $state("");
+
   function handleBurnToken(address: string) {
     // TODO: Implement burn token functionality
     console.log(`Burning token for address: ${address}`);
   }
 </script>
 
+{#snippet tabNavigation()}
+  <div class="border-b border-gray-200 mb-4">
+    <div class="flex space-x-4">
+      <button
+        class={`py-2 px-4 font-medium text-sm border-b-2 transition-colors duration-200 ${
+          activeTab === "scanner"
+            ? "border-blue-500 text-blue-600"
+            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        }`}
+        onclick={() => (activeTab = "scanner")}
+      >
+        QR Scanner
+      </button>
+      <button
+        class={`py-2 px-4 font-medium text-sm border-b-2 transition-colors duration-200 ${
+          activeTab === "details"
+            ? "border-blue-500 text-blue-600"
+            : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        }`}
+        onclick={() => (activeTab = "details")}
+      >
+        Event Details
+      </button>
+    </div>
+  </div>
+{/snippet}
+
+{#snippet eventDescription()}
+  <div class="space-y-3">
+    <div class="flex items-center">
+      <IconCal />
+      <span>{event.date}</span>
+    </div>
+    <div class="flex items-center">
+      <IconClock />
+      <span>{event.time}</span>
+    </div>
+    <div class="flex items-center">
+      <IconPin />
+      <span class="break-words">{event.location}</span>
+    </div>
+    <p class="mt-4 text-gray-700">{event.description}</p>
+  </div>
+{/snippet}
+
 <div
   class="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
 >
-  <div class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-4xl mx-4 relative max-h-[90vh] overflow-y-auto">
+  <div
+    class="bg-white rounded-lg p-4 sm:p-6 w-full max-w-4xl mx-4 relative max-h-[90vh] overflow-y-auto"
+  >
     <button
       class="absolute right-3 top-3 font-mono bg-gray-100 p-2 rounded-full min-w-10 hover:bg-gray-200"
-      on:click={onClose}
+      onclick={onClose}
     >
       x
     </button>
@@ -49,110 +104,32 @@
     <!-- Event Summary -->
     <div class="mb-8">
       <h2 class="text-2xl font-bold mb-4">{event.title}</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-600">
-        <div class="flex items-center">
-          <svg
-            class="w-5 h-5 mr-2 flex-shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+
+      {@render tabNavigation()}
+
+      <!-- Tab Content -->
+      {#if activeTab === "details"}
+        {@render eventDescription()}
+      {:else}
+        <div class="bg-gray-50 rounded-lg p-4 flex flex-col gap-4">
+          <QrScanner bind:solanaAddress />
+          <div>
+            <input
+              class="bg-white p-2 w-full"
+              placeholder="Solana Address"
+              bind:value={solanaAddress}
             />
-          </svg>
-          <span>{event.date}</span>
+          </div>
+          <div class="flex justify-between gap-2">
+            <button class="bg-green-100 py-2 px-4 rounded w-full">
+              Confirm
+            </button>
+            <button class="bg-red-100 py-2 px-4 rounded w-full"> Burn </button>
+          </div>
         </div>
-        <div class="flex items-center">
-          <svg
-            class="w-5 h-5 mr-2 flex-shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>{event.time}</span>
-        </div>
-        <div class="flex items-center sm:col-span-2">
-          <svg
-            class="w-5 h-5 mr-2 flex-shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          <span class="break-words">{event.location}</span>
-        </div>
-      </div>
-      <p class="mt-4 text-gray-700">{event.description}</p>
+      {/if}
     </div>
 
     <!-- RSVP Records -->
-    <div>
-      <h3 class="text-xl font-semibold mb-4">RSVP Records</h3>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            {#each rsvpRecords as record}
-              <tr class="hover:bg-gray-50">
-                <td class="px-6 py-4 whitespace-nowrap text-sm">{record.name}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-mono">
-                  {truncateAddress(record.address)}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <span
-                    class={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                    ${
-                      record.status === "confirmed"
-                        ? "bg-green-100 text-green-800"
-                        : "bg-yellow-100 text-yellow-800"
-                    }`}
-                  >
-                    {record.status}
-                  </span>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                  <button
-                    on:click={() => handleBurnToken(record.address)}
-                    class="text-red-600 hover:text-red-900 font-medium"
-                  >
-                    Burn Token
-                  </button>
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
-    </div>
   </div>
 </div>
