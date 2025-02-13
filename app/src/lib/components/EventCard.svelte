@@ -4,6 +4,8 @@
     import IconCal from "./icons/IconCal.svelte";
     import ModalManageEvent from "./ModalManageEvent.svelte";
     import type { EventType, EventResponse } from "$lib/types";
+    import { walletStore } from "$lib/wallet/walletStore.svelte";
+    import { mutations, queries } from "$lib/services/apiQueries";
 
     let {
         event,
@@ -11,8 +13,13 @@
         event: EventResponse;
     } = $props();
 
+    const mutate = mutations.rsvpEvent;
+
     function handleRSVP(eventId: string, action: "rsvp" | "confirm") {}
-    const isCreator = false;
+
+    const isCreator = $derived(
+        $walletStore.walletAddress === event.account.admin
+    );
 
     let isOpen = $state(false);
     function onOpen() {
