@@ -7,3 +7,13 @@ export type EventType = {
   location: string;
   creator: string;
 };
+
+export type EventResponse = {
+    publicKey: string;
+    account: {
+      admin: string;
+      stopped: boolean;
+      eventName: string;
+      deposit: string; 
+    }
+  }

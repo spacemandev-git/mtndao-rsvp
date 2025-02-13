@@ -2,6 +2,8 @@
     import type { EventType } from "$lib/types";
     import {
         Connection,
+        PublicKey,
+        Transaction,
         VersionedMessage,
         VersionedTransaction,
         sendAndConfirmTransaction,
@@ -15,7 +17,7 @@
     import { mutations } from "$lib/services/apiQueries";
     import { walletStore } from "$lib/wallet/walletStore.svelte";
 
-    let price = $state(0);
+    let price = $state(1);
     let tx: VersionedTransaction | undefined = $state(undefined);
 
     let newEvent = $state<{
@@ -26,7 +28,7 @@
     }>({
         name: "",
         description: "",
-        lamports: 0,
+        lamports: 1 * 1e7,
         admin: $walletStore.walletAddress ?? "",
     });
 
@@ -37,7 +39,7 @@
             return console.error("Wallet not connected");
         $mutate.mutate({
             ...newEvent,
-            lamports: (price * 1e8).toString(),
+            lamports: (price * 1e7).toString(),
         });
 
         const response = $mutate.data;
@@ -53,9 +55,9 @@
         // onClose();
     }
 
-    async function signTransaction(tx: Transaction) {
+    async function signTransaction() {
         const connection = new Connection(
-            "https://api.mainnet-beta.solana.com"
+            "https://nerissa-3i7at8-fast-mainnet.helius-rpc.com/"
         );
 
         if (!tx) return console.error("No transaction provided");
@@ -66,13 +68,8 @@
         try {
             console.log("Transaction before signing:", tx);
 
-            // Ensure recentBlockhash is set
-            const { blockhash } = await connection.getLatestBlockhash();
-            tx.recentBlockhash = blockhash;
-            tx.feePayer = new PublicKey(wallet.publicKey);
-
             // Request signature from the wallet
-            const signedTx = await wallet.signTransaction(tx);
+            const signedTx = await (wallet as any).signTransaction(tx);
             console.log("Signed transaction:", signedTx);
 
             // Send the transaction
@@ -214,7 +211,7 @@
                     </button>
                 {:else}
                     <button
-                        onclick={signTransaction}
+                        onclick={() => signTransaction()}
                         class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 w-full sm:w-auto"
                     >
                         sign

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { EventType } from "$lib/types";
+import type { EventType, EventResponse } from "$lib/types";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:5173/api", // TODO: replace with env. Proxy in VITE
@@ -8,7 +8,7 @@ const apiClient = axios.create({
 // Get all open events
 async function getEvents() {
   const res = await apiClient.get(`/events`);
-  return res.data;
+  return res.data as EventResponse[];
 }
 
 // RSVP to an event as an attendee
