@@ -51,14 +51,12 @@
 {/if}
 
 <div class="min-h-screen bg-gray-100">
-  <!-- Navigation Bar -->
   <Nav
     onOpen={() => {
       showCreateModal = true;
     }}
   />
 
-  <!-- Main Content -->
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-4xl font-bold text-center mb-8">Upcoming Events</h1>
 
