@@ -12,12 +12,10 @@ const program = new Program<RSVPTypes>(idl as RSVPTypes, {connection});
 app.get("/", (c) => c.text("MTNDAO RSVP API"));
 
 // PUBLIC
+// TODO: Do a GPA for events
 app.get("/events", async (c) => {
-    return c.json(await prisma.event.findMany({
-        where: {
-            status: EventStatus.OPEN
-        }
-    }));
+    const events = await program.account.event.all();
+    return c.json(events);
 })
 
 app.post("/event/rsvp", async (c) => {
@@ -68,7 +66,7 @@ app.post("/event/rsvp", async (c) => {
 // ADMIN
 app.post("/event/create", async (c) => {
     try {
-        const { name, description, lamports, admin } = await c.req.json();
+        const { name, lamports, admin } = await c.req.json();
 
         const eventAddress = PublicKey.findProgramAddressSync(
             [
@@ -78,18 +76,6 @@ app.post("/event/create", async (c) => {
             ],
             program.programId
         )[0];
-
-        const resp = await prisma.event.create({
-            data: {
-                name,
-                description,
-                deposit: lamports,
-                admin,
-                address: eventAddress.toBase58(),
-                status: EventStatus.OPEN
-            }
-        });
-
 
         const createEventIx = await program.methods.initEvent({
             eventName: name,
@@ -174,24 +160,13 @@ app.post("/event/remove", async     (c) => {
     try {
         const { event, admin } = await c.req.json();
 
-        const eventDB = await prisma.event.findUnique({
-            where: {
-                address: event
-            }
-        });
-
-        if (!eventDB) {
-            return c.json({
-                error: "Event not found"
-            }, 404)
-        }
-
-        if (eventDB.admin !== admin) {
+        const account = await program.account.event.fetch(new PublicKey(event));
+        if(account.admin.toBase58() !== admin) {
             return c.json({
                 error: "You are not the admin of this event"
             }, 403)
         }
-        
+
         const removeIx = await program.methods.stopEvent()
             .accountsPartial({
                 admin: new PublicKey(admin),
@@ -199,7 +174,7 @@ app.post("/event/remove", async     (c) => {
                     [
                         Buffer.from("event"),
                         new PublicKey(admin).toBytes(),
-                        Buffer.from(eventDB.name)
+                        Buffer.from(event)
                     ],
                     program.programId)[0]
             })

@@ -24,6 +24,7 @@ declare global {
         connect(): Promise<{ publicKey: { toString(): string } }>; // Connects to the wallet
         disconnect(): Promise<void>; // Disconnects the wallet
         signTransaction?: (transaction: any) => Promise<any>; // Signs a transaction
+        signAndSendTransaction?: (transaction: any) => Promise<any>; // Signs a transaction
         signAllTransactions?: (transactions: any[]) => Promise<any[]>; // Signs multiple transactions
         signMessage?: (
             message: Uint8Array
