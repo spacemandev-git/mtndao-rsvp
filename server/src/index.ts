@@ -78,8 +78,8 @@ app.post("/event/create", async (c) => {
             ],
             program.programId
         )[0];
-    
-        await prisma.event.create({
+
+        const resp = await prisma.event.create({
             data: {
                 name,
                 description,
@@ -89,7 +89,8 @@ app.post("/event/create", async (c) => {
                 status: EventStatus.OPEN
             }
         });
-    
+
+
         const createEventIx = await program.methods.initEvent({
             eventName: name,
             deposit: new BN(lamports) // in lamports
@@ -98,7 +99,6 @@ app.post("/event/create", async (c) => {
                 admin: new PublicKey(admin),
             })
             .instruction();
-    
         const msg = new TransactionMessage({
             payerKey: new PublicKey(admin),
             recentBlockhash: (await connection.getLatestBlockhash()).blockhash,
@@ -109,7 +109,6 @@ app.post("/event/create", async (c) => {
                 createEventIx
             ]
         });
-    
         const serialized = msg.compileToV0Message().serialize();
         const b64 = Buffer.from(serialized).toString("base64");
     
@@ -118,6 +117,7 @@ app.post("/event/create", async (c) => {
             msg: b64
         }); 
     } catch (e) {
+        console.log({e})
         return c.json({
             error: e
         }, 500)

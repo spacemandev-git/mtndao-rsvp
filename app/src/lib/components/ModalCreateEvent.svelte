@@ -1,8 +1,7 @@
 <script lang="ts">
     import type { EventType } from "$lib/types";
     import { VersionedMessage, VersionedTransaction } from "@solana/web3.js";
-    //@ts-ignore
-    import { Buffer } from "node-buffer";
+    import { Buffer } from "buffer";
     let {
         onClose = () => {},
     }: {
@@ -32,7 +31,7 @@
             return console.error("Wallet not connected");
         $mutate.mutate({
             ...newEvent,
-            lamports: price * 1e8,
+            lamports: (price * 1e8).toString(),
         });
 
         const response = $mutate.data;
@@ -40,7 +39,7 @@
         console.log({ response });
 
         const deserializedMsg = VersionedMessage.deserialize(
-            Buffer.from(response.msg, "base64")
+            Uint8Array.from(Buffer.from(response.msg, "base64"))
         );
 
         const tx = new VersionedTransaction(deserializedMsg);

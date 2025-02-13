@@ -28,7 +28,7 @@
 		"@solana/web3.js": "^1.98.0",
 		"@tanstack/svelte-query": "^5.66.0",
 		"axios": "^1.7.9",
-		"html5-qrcode": "^2.3.8",
-		"node-buffer": "^1.0.3"
+		"buffer": "^6.0.3",
+		"html5-qrcode": "^2.3.8"
 	}
 }
