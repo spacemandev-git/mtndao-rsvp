@@ -1,8 +1,8 @@
 import { BN, Program } from "@coral-xyz/anchor";
 import { ComputeBudgetProgram, Connection, PublicKey, TransactionMessage } from "@solana/web3.js";
 import { Hono } from "hono";
-import idl from "../../common/rsvp.json";
-import { type Rsvp as RSVPTypes} from "../../common/rsvp.ts"
+import idl from "../program/rsvp.json";
+import { type Rsvp as RSVPTypes} from "../program/rsvp.ts"
 const app = new Hono();
 const connection = new Connection(process.env.RPC_URL!);
 const program = new Program<RSVPTypes>(idl as RSVPTypes, {connection});

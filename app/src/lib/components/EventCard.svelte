@@ -6,12 +6,22 @@
     import type { EventType, EventResponse } from "$lib/types";
     import { walletStore } from "$lib/wallet/walletStore.svelte";
     import { mutations, queries } from "$lib/services/apiQueries";
+    import {
+        Connection,
+        PublicKey,
+        Transaction,
+        VersionedMessage,
+        VersionedTransaction,
+        sendAndConfirmTransaction,
+    } from "@solana/web3.js";
 
     let {
         event,
     }: {
         event: EventResponse;
     } = $props();
+
+    let tx: VersionedTransaction | undefined = $state(undefined);
 
     const mutate = mutations.rsvpEvent();
 
@@ -33,7 +43,9 @@
 
         tx = new VersionedTransaction(deserializedMsg);
 
-        // onClose();
+        await signTransaction();
+
+        onClose();
     }
 
     async function signTransaction() {
