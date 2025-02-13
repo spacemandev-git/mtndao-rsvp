@@ -21,7 +21,12 @@ async function postRsvpAttendee(params: {
 }
 
 // Create a new event
-async function postEvent(params: EventType) {
+async function postEvent(params: {
+  name: string;
+  description: string;
+  lamports: number;
+  admin: string;
+}) {
   const res = await apiClient.post(`/event/create`, params);
   return res.data;
 }

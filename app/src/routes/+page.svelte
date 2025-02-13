@@ -11,35 +11,6 @@
   import { queries } from "$lib/services/apiQueries";
 
   let showCreateModal = $state(false);
-  let _events: EventType[] = $state([
-    {
-      id: "1",
-      title: "Community Meetup",
-      date: "2025-03-01",
-      time: "18:00",
-      location: "Downtown Hub",
-      description: "Join us for our monthly community gathering!",
-      creator: "John Doe",
-    },
-    {
-      id: "2",
-      title: "Tech Workshop",
-      date: "2025-03-15",
-      time: "14:00",
-      location: "Innovation Center",
-      description: "Learn about the latest in web development",
-      creator: "John Doe",
-    },
-    {
-      id: "3",
-      title: "Networking Night",
-      date: "2025-03-30",
-      time: "19:00",
-      location: "Skyline Lounge",
-      description: "Connect with professionals in your industry",
-      creator: "John Doe",
-    },
-  ]);
 
   const query = queries.getEvents();
 
