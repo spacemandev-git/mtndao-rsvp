@@ -25,13 +25,14 @@
 
   const mutate = mutations.createEvent();
 
-  function createEvent() {
+  async function createEvent() {
     if (!$walletStore.walletAddress)
       return console.error("Wallet not connected");
-    // Handle event creation logic here
-    console.log("Creating event:", newEvent);
     const response = $mutate.mutate({ ...newEvent, lamports: price * 1e8 });
     console.log({ response });
+
+    $walletStore.wallet?.sendTransaction();
+
     onClose();
   }
 </script>
