@@ -14,6 +14,7 @@
         VersionedTransaction,
         sendAndConfirmTransaction,
     } from "@solana/web3.js";
+    import { Buffer } from "buffer";
 
     let {
         event,
@@ -115,7 +116,7 @@
                 </button>
             {:else}
                 <button
-                    onclick={() => handleRSVP(event.publicKey, "rsvp")}
+                    onclick={createRsvp}
                     class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors duration-200"
                 >
                     RSVP

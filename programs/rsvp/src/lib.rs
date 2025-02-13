@@ -35,7 +35,7 @@ pub mod rsvp {
         Ok(())
     }
 
-    pub fn confirm_rsvp(ctx: Context<ConfirmRSVP>, burn: bool) -> Result<()> {
+    pub fn confirm_rsvp(ctx: Context<ConfirmRSVP>, _evt_name: String, burn: bool) -> Result<()> {
         if burn {
             transfer(
                 CpiContext::new(
@@ -133,11 +133,12 @@ pub struct RSVP<'info> {
 }
 
 #[derive(Accounts)]
+#[instruction(evt_name: String)]
 pub struct ConfirmRSVP<'info> {
     pub admin: Signer<'info>,
     #[account(
         mut,
-        seeds = [b"event".as_ref(), admin.key().as_ref(), event.event_name.as_ref()],
+        seeds = [b"event".as_ref(), admin.key().as_ref(), evt_name.as_ref()],
         bump,
     )]
     pub event: Account<'info, Event>,

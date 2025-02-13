@@ -8,7 +8,7 @@ export default defineConfig({
     allowedHosts:true,
     proxy: {
       "/api": {
-        target: "http://localhost:3000",
+        target: "https://mtndao-rsvp-production.up.railway.app",
         changeOrigin: true,
         rewrite: (path: string) => path.replace(/^\/api/, ""),
       },

@@ -16,6 +16,13 @@ app.get("/events", async (c) => {
     return c.json(events);
 })
 
+app.get("/events/:user", async (c) => {
+    const { user } = c.req.param();
+    const rsvps = await program.account.rsvpAccount.all();
+    const userRsvps = rsvps.filter(rsvp => rsvp.account.user.toBase58() === user);
+    return c.json(userRsvps);
+})
+
 app.post("/event/rsvp", async (c) => {
     try {
         const { event, address } = await c.req.json();
@@ -114,8 +121,11 @@ app.post("/event/confirm", async (c) => {
     try {
         const { event, attendee, burn, admin } = await c.req.json();
 
-        const confirmIx = await program.methods.confirmRsvp(burn)
-            .accounts({
+        const evtAccount = await program.account.event.fetch(new PublicKey(event));
+
+
+        const confirmIx = await program.methods.confirmRsvp(evtAccount.eventName, burn)
+            .accountsPartial({
                 admin: new PublicKey(admin),
                 user: new PublicKey(attendee),
                 rsvpAccount: PublicKey.findProgramAddressSync(

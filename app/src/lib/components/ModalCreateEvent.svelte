@@ -9,13 +9,14 @@
         sendAndConfirmTransaction,
     } from "@solana/web3.js";
     import { Buffer } from "buffer";
+    import { mutations } from "$lib/services/apiQueries";
+    import { walletStore } from "$lib/wallet/walletStore.svelte";
+
     let {
         onClose = () => {},
     }: {
         onClose?(): void;
     } = $props();
-    import { mutations } from "$lib/services/apiQueries";
-    import { walletStore } from "$lib/wallet/walletStore.svelte";
 
     let price = $state(1);
     let tx: VersionedTransaction | undefined = $state(undefined);
@@ -28,7 +29,7 @@
     }>({
         name: "",
         description: "",
-        lamports: 1 * 1e7,
+        lamports: 1 * 1e8,
         admin: $walletStore.walletAddress ?? "",
     });
 
@@ -39,7 +40,7 @@
             return console.error("Wallet not connected");
         $mutate.mutate({
             ...newEvent,
-            lamports: (price * 1e7).toString(),
+            lamports: (price * 1e8).toString(),
         });
 
         const response = $mutate.data;

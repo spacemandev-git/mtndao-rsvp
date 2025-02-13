@@ -36,7 +36,7 @@ async function postEvent(params: {
 async function postConfirmRsvp(params: {
   event: string;
   attendee: string;
-  action: "burn" | "confirm";
+  burn: boolean
   admin: string;
 }) {
   const res = await apiClient.post(`/event/confirm`, params);

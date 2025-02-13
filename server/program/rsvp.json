@@ -44,9 +44,8 @@
                 "path": "admin"
               },
               {
-                "kind": "account",
-                "path": "event.event_name",
-                "account": "Event"
+                "kind": "arg",
+                "path": "evt_name"
               }
             ]
           }
@@ -65,6 +64,10 @@
         }
       ],
       "args": [
+        {
+          "name": "_evt_name",
+          "type": "string"
+        },
         {
           "name": "burn",
           "type": "bool"

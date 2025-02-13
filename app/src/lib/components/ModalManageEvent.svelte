@@ -4,6 +4,17 @@
     import IconClock from "./icons/IconClock.svelte";
     import IconPin from "./icons/IconPin.svelte";
     import QrScanner from "./QrScanner.svelte";
+    import {
+        Connection,
+        PublicKey,
+        Transaction,
+        VersionedMessage,
+        VersionedTransaction,
+        sendAndConfirmTransaction,
+    } from "@solana/web3.js";
+    import { Buffer } from "buffer";
+    import { mutations } from "$lib/services/apiQueries";
+    import { walletStore } from "$lib/wallet/walletStore.svelte";
 
     let {
         event,
@@ -16,6 +27,61 @@
     let activeTab = $state<"details" | "scanner">("scanner");
 
     let solanaAddress = $state("");
+    let tx: VersionedTransaction | undefined = $state(undefined);
+
+    const mutate = mutations.confirmRsvp();
+
+    async function confirmRsvp(action: "burn" | "confirm") {
+        if (!$walletStore.walletAddress)
+            return console.error("Wallet not connected");
+        $mutate.mutate({
+            event: event.publicKey,
+            attendee: solanaAddress,
+            burn: action === "burn",
+            admin: $walletStore.walletAddress,
+        });
+
+        const response = $mutate.data;
+
+        console.log({ response });
+
+        const deserializedMsg = VersionedMessage.deserialize(
+            Uint8Array.from(Buffer.from(response.msg, "base64"))
+        );
+
+        tx = new VersionedTransaction(deserializedMsg);
+
+        // onClose();
+    }
+
+    async function signTransaction() {
+        const connection = new Connection(
+            "https://nerissa-3i7at8-fast-mainnet.helius-rpc.com/"
+        );
+
+        if (!tx) return console.error("No transaction provided");
+
+        const wallet = window.solana;
+        if (!wallet) return console.error("Wallet not connected");
+
+        try {
+            console.log("Transaction before signing:", tx);
+
+            // Request signature from the wallet
+            const signedTx = await (wallet as any).signTransaction(tx);
+            console.log("Signed transaction:", signedTx);
+
+            // Send the transaction
+            const txId = await connection.sendRawTransaction(
+                signedTx.serialize()
+            );
+            console.log("Transaction ID:", txId);
+
+            return txId;
+        } catch (err) {
+            console.error("Transaction signing error:", err);
+        }
+    }
 </script>
 
 {#snippet tabNavigation()}
@@ -76,10 +142,16 @@
                         />
                     </div>
                     <div class="flex justify-between gap-2">
-                        <button class="bg-green-100 py-2 px-4 rounded w-full">
+                        <button
+                            class="bg-green-100 py-2 px-4 rounded w-full"
+                            onclick={() => confirmRsvp("confirm")}
+                        >
                             Confirm
                         </button>
-                        <button class="bg-red-100 py-2 px-4 rounded w-full">
+                        <button
+                            class="bg-red-100 py-2 px-4 rounded w-full"
+                            onclick={() => confirmRsvp("burn")}
+                        >
                             Burn
                         </button>
                     </div>

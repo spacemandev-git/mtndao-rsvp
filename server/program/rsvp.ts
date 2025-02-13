@@ -50,9 +50,8 @@ export type Rsvp = {
                 "path": "admin"
               },
               {
-                "kind": "account",
-                "path": "event.event_name",
-                "account": "event"
+                "kind": "arg",
+                "path": "evtName"
               }
             ]
           }
@@ -71,6 +70,10 @@ export type Rsvp = {
         }
       ],
       "args": [
+        {
+          "name": "evtName",
+          "type": "string"
+        },
         {
           "name": "burn",
           "type": "bool"
