@@ -111,7 +111,7 @@
     <!-- RSVP Records -->
     <div>
       <h3 class="text-xl font-semibold mb-4">RSVP Records</h3>
-      <div class="overflow-x-auto">
+      <div class="hidden sm:block overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
@@ -152,6 +152,38 @@
             {/each}
           </tbody>
         </table>
+      </div>
+      <div class="grid gap-4 sm:hidden">
+        {#each rsvpRecords as record}
+          <div class="bg-white rounded-lg shadow p-4 space-y-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <h4 class="font-medium">{record.name}</h4>
+                <p class="text-sm font-mono text-gray-600 mt-1">
+                  {truncateAddress(record.address)}
+                </p>
+              </div>
+              <span
+                class={`px-2 py-1 text-xs font-semibold rounded-full
+                ${
+                  record.status === "confirmed"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}
+              >
+                {record.status}
+              </span>
+            </div>
+            <div class="pt-2 border-t border-gray-100">
+              <button
+                on:click={() => handleBurnToken(record.address)}
+                class="w-full text-center py-2 text-red-600 hover:text-red-900 font-medium text-sm"
+              >
+                Burn Token
+              </button>
+            </div>
+          </div>
+        {/each}
       </div>
     </div>
   </div>
