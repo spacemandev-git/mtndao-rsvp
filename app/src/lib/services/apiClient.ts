@@ -13,7 +13,7 @@ async function getEvents() {
 
 // RSVP to an event as an attendee
 async function postRsvpAttendee(params: {
-  eventAddress: string;
+  event: string;
   address: string;
 }) {
   const res = await apiClient.post(`/event/rsvp`, params);
