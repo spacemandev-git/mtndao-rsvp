@@ -30,7 +30,8 @@
       return console.error("Wallet not connected");
     // Handle event creation logic here
     console.log("Creating event:", newEvent);
-    $mutate.mutate({ ...newEvent, lamports: price * 1e8 });
+    const response = $mutate.mutate({ ...newEvent, lamports: price * 1e8 });
+    console.log({ response });
     onClose();
   }
 </script>
