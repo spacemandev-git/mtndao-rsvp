@@ -13,6 +13,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-node": "^5.2.11",
+		"@sveltejs/adapter-static": "^3.0.8",
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tailwindcss/vite": "^4.0.0",
@@ -23,6 +24,9 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
-		"@solana/wallet-adapter-base": "^0.9.23"
+		"@solana/wallet-adapter-base": "^0.9.23",
+		"@tanstack/svelte-query": "^5.66.0",
+		"axios": "^1.7.9",
+		"html5-qrcode": "^2.3.8"
 	}
 }
