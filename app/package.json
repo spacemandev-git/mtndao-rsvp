@@ -25,8 +25,10 @@
 	},
 	"dependencies": {
 		"@solana/wallet-adapter-base": "^0.9.23",
+		"@solana/web3.js": "^1.98.0",
 		"@tanstack/svelte-query": "^5.66.0",
 		"axios": "^1.7.9",
-		"html5-qrcode": "^2.3.8"
+		"html5-qrcode": "^2.3.8",
+		"node-buffer": "^1.0.3"
 	}
 }

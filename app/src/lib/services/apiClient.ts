@@ -28,6 +28,7 @@ async function postEvent(params: {
   admin: string;
 }) {
   const res = await apiClient.post(`/event/create`, params);
+  console.log('post event', res.data)
   return res.data;
 }
 

@@ -1,5 +1,5 @@
 import { BN, Program } from "@coral-xyz/anchor";
-import { ComputeBudgetProgram, Connection, PublicKey, TransactionMessage, VersionedTransaction } from "@solana/web3.js";
+import { ComputeBudgetProgram, Connection, PublicKey, TransactionMessage, VersionedMessage, VersionedTransaction } from "@solana/web3.js";
 import { EventStatus, PrismaClient } from "@prisma/client";
 import { Hono } from "hono";
 import idl from "../../common/rsvp.json";
