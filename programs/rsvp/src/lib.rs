@@ -13,10 +13,15 @@ pub mod rsvp {
         event.admin = *ctx.accounts.admin.key;
         event.event_name = args.event_name;
         event.deposit = args.deposit;
+        event.stopped = false;
         Ok(())
     }
 
     pub fn rsvp(ctx: Context<RSVP>) -> Result<()> {
+        if ctx.accounts.event.stopped {
+            return Err(ErrorCode::EventStopped.into());
+        }
+
         transfer(
             CpiContext::new(
                 ctx.accounts.system_program.to_account_info(),
@@ -58,6 +63,17 @@ pub mod rsvp {
 
         Ok(())
     }
+
+    pub fn stop_event(ctx: Context<StopEvent>) -> Result<()> {
+        ctx.accounts.event.stopped = true;
+        Ok(())
+    }
+}
+
+#[error_code]
+pub enum ErrorCode {
+    #[msg("Event is stopped")]
+    EventStopped,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
@@ -70,6 +86,7 @@ pub struct EventArgs {
 #[derive(InitSpace)]
 pub struct Event {
     pub admin: Pubkey,
+    pub stopped: bool,
     #[max_len(128)]
     pub event_name: String,
     pub deposit: u64, //lamports
@@ -134,4 +151,16 @@ pub struct ConfirmRSVP<'info> {
     #[account(mut)]
     pub user: AccountInfo<'info>,
     pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+pub struct StopEvent<'info> {
+    pub admin: Signer<'info>,
+    #[account(
+        mut,
+        constraint = event.admin == admin.key(),
+        seeds = [b"event".as_ref(), admin.key().as_ref(), event.event_name.as_ref()],
+        bump,
+    )]
+    pub event: Account<'info, Event>,
 }

@@ -190,6 +190,53 @@ export type Rsvp = {
         }
       ],
       "args": []
+    },
+    {
+      "name": "stopEvent",
+      "discriminator": [
+        191,
+        106,
+        139,
+        240,
+        206,
+        37,
+        73,
+        46
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "signer": true
+        },
+        {
+          "name": "event",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  118,
+                  101,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin"
+              },
+              {
+                "kind": "account",
+                "path": "event.event_name",
+                "account": "event"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
@@ -220,6 +267,13 @@ export type Rsvp = {
       ]
     }
   ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "eventStopped",
+      "msg": "Event is stopped"
+    }
+  ],
   "types": [
     {
       "name": "event",
@@ -229,6 +283,10 @@ export type Rsvp = {
           {
             "name": "admin",
             "type": "pubkey"
+          },
+          {
+            "name": "stopped",
+            "type": "bool"
           },
           {
             "name": "eventName",
