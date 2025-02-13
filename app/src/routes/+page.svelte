@@ -2,6 +2,7 @@
   import EventCard from "$lib/components/EventCard.svelte";
   import ModalCreateEvent from "$lib/components/ModalCreateEvent.svelte";
   import Nav from "$lib/components/Nav.svelte";
+  import type { EventType } from "$lib/types";
   import {
     checkWallet,
     connectWallet,
@@ -9,7 +10,7 @@
   import { onMount } from "svelte";
 
   let showCreateModal = $state(false);
-  let events = $state([
+  let events: EventType[] = $state([
     {
       id: "1",
       title: "Community Meetup",
@@ -17,6 +18,7 @@
       time: "18:00",
       location: "Downtown Hub",
       description: "Join us for our monthly community gathering!",
+      creator: "John Doe",
     },
     {
       id: "2",
@@ -25,6 +27,7 @@
       time: "14:00",
       location: "Innovation Center",
       description: "Learn about the latest in web development",
+      creator: "John Doe",
     },
     {
       id: "3",
@@ -33,6 +36,7 @@
       time: "19:00",
       location: "Skyline Lounge",
       description: "Connect with professionals in your industry",
+      creator: "John Doe",
     },
   ]);
 

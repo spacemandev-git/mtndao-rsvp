@@ -2,23 +2,30 @@
   import IconPin from "./icons/IconPin.svelte";
   import IconClock from "./icons/IconClock.svelte";
   import IconCal from "./icons/IconCal.svelte";
+  import ModalManageEvent from "./ModalManageEvent.svelte";
+  import type { EventType } from "$lib/types";
 
   let {
     event,
   }: {
-    event: {
-      id: string; // onchain address
-      title: string;
-      date: string;
-      time: string;
-      location: string;
-      description: string;
-    };
+    event: EventType;
   } = $props();
 
   function handleRSVP(eventId: string, action: "rsvp" | "confirm") {}
   const isCreator = true;
+
+  let isOpen = $state(false);
+  function onOpen() {
+    isOpen = true;
+  }
+  function onClose() {
+    isOpen = false;
+  }
 </script>
+
+{#if isOpen}
+  <ModalManageEvent {event} {onClose} />
+{/if}
 
 <div
   class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
@@ -47,7 +54,7 @@
     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
       {#if isCreator}
         <button
-          onclick={() => handleRSVP(event.id, "confirm")}
+          onclick={onOpen}
           class="flex-1 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors duration-200"
         >
           Manage
