@@ -9,7 +9,6 @@
   import { onMount } from "svelte";
 
   let showCreateModal = $state(false);
-  let newEventName = $state("");
   let events = $state([
     {
       id: "1",
