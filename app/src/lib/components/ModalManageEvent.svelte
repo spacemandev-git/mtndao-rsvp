@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { EventType } from "$lib/types";
-  import { truncateAddress } from "$lib/utils";
   import IconCal from "./icons/IconCal.svelte";
   import IconClock from "./icons/IconClock.svelte";
   import IconPin from "./icons/IconPin.svelte";
@@ -14,33 +13,9 @@
     onClose(): void;
   } = $props();
 
-  // Mock RSVP data - replace with actual data from your backend
-  let rsvpRecords = $state([
-    {
-      name: "Alice Johnson",
-      address: "7KqpRwzkkeP4gJ4s4qDWvxSxv8gGzYLTBkRFqE5X5Ymm",
-      status: "confirmed",
-    },
-    {
-      name: "Bob Smith",
-      address: "BzWpkrCbAzJM1kJH9YG8Pq7GYpJGLxUSJ4kX7Jd6oL2K",
-      status: "unconfirmed",
-    },
-    {
-      name: "Charlie Brown",
-      address: "5tgHyL3FVvyZdQkPjVYRX9Q7YZZ7XfGzN8v2EchoZj1M",
-      status: "confirmed",
-    },
-  ]);
-
   let activeTab = $state<"details" | "scanner">("scanner");
 
   let solanaAddress = $state("");
-
-  function handleBurnToken(address: string) {
-    // TODO: Implement burn token functionality
-    console.log(`Burning token for address: ${address}`);
-  }
 </script>
 
 {#snippet tabNavigation()}
