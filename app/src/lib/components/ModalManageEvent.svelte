@@ -35,6 +35,8 @@
 
   let activeTab = $state<"details" | "scanner">("scanner");
 
+  let solanaAddress = $state("");
+
   function handleBurnToken(address: string) {
     // TODO: Implement burn token functionality
     console.log(`Burning token for address: ${address}`);
@@ -109,8 +111,21 @@
       {#if activeTab === "details"}
         {@render eventDescription()}
       {:else}
-        <div class="bg-gray-50 rounded-lg p-4">
-          <QrScanner />
+        <div class="bg-gray-50 rounded-lg p-4 flex flex-col gap-4">
+          <QrScanner bind:solanaAddress />
+          <div>
+            <input
+              class="bg-white p-2 w-full"
+              placeholder="Solana Address"
+              bind:value={solanaAddress}
+            />
+          </div>
+          <div class="flex justify-between gap-2">
+            <button class="bg-green-100 py-2 px-4 rounded w-full">
+              Confirm
+            </button>
+            <button class="bg-red-100 py-2 px-4 rounded w-full"> Burn </button>
+          </div>
         </div>
       {/if}
     </div>
