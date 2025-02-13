@@ -12,18 +12,16 @@ async function getEvents() {
 }
 
 // RSVP to an event as an attendee
-async function postRsvpAttendee(params: { event: string; address: string }) {
+async function postRsvpAttendee(params: {
+  eventAddress: string;
+  address: string;
+}) {
   const res = await apiClient.post(`/event/rsvp`, params);
   return res.data;
 }
 
 // Create a new event
-async function postEvent(params: {
-  name: string;
-  description: string;
-  lamports: number;
-  admin: string;
-}) {
+async function postEvent(params: EventType) {
   const res = await apiClient.post(`/event/create`, params);
   return res.data;
 }
@@ -32,7 +30,7 @@ async function postEvent(params: {
 async function postConfirmRsvp(params: {
   event: string;
   attendee: string;
-  burn: boolean;
+  action: "burn" | "confirm";
   admin: string;
 }) {
   const res = await apiClient.post(`/event/confirm`, params);
