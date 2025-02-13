@@ -45,18 +45,21 @@
       {event.description}
     </p>
     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-      <button
-        onclick={() => handleRSVP(event.id, "rsvp")}
-        class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors duration-200"
-      >
-        RSVP
-      </button>
-      <button
-        onclick={() => handleRSVP(event.id, "confirm")}
-        class="flex-1 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors duration-200"
-      >
-        Confirm RSVP
-      </button>
+      {#if isCreator}
+        <button
+          onclick={() => handleRSVP(event.id, "confirm")}
+          class="flex-1 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors duration-200"
+        >
+          Manage
+        </button>
+      {:else}
+        <button
+          onclick={() => handleRSVP(event.id, "rsvp")}
+          class="flex-1 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors duration-200"
+        >
+          RSVP
+        </button>
+      {/if}
     </div>
   </div>
 </div>
