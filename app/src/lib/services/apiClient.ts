@@ -1,30 +1,49 @@
 import axios from "axios";
+import type { EventType } from "$lib/types";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:5173/api", // TODO: replace with env. Proxy in VITE
 });
 
+// Get all open events
 async function getEvents() {
   const res = await apiClient.get(`/events`);
   return res.data;
 }
 
-// Rsvp to an event as an attendee
-async function postRsvpAttendee() {
-  const res = await apiClient.get(`/events`);
+// RSVP to an event as an attendee
+async function postRsvpAttendee(params: { event: string; address: string }) {
+  const res = await apiClient.post(`/event/rsvp`, params);
   return res.data;
 }
 
-// Only visible to creator of event
-async function getAttendees() {}
+// Create a new event
+async function postEvent(params: {
+  name: string;
+  description: string;
+  lamports: number;
+  admin: string;
+}) {
+  const res = await apiClient.post(`/event/create`, params);
+  return res.data;
+}
 
-// anyone can create an event
-async function postEvent() {}
+// Confirm or burn an attendee's RSVP
+async function postConfirmRsvp(params: {
+  event: string;
+  attendee: string;
+  burn: boolean;
+  admin: string;
+}) {
+  const res = await apiClient.post(`/event/confirm`, params);
+  return res.data;
+}
 
-// CONFIRM or BURN an attendee
-async function postConfirmRsvp() {}
-
-async function postRemoveEvent() {}
+// Remove an event (admin only)
+async function postRemoveEvent(params: { event: string; admin: string }) {
+  const res = await apiClient.post(`/event/remove`, params);
+  return res.data;
+}
 
 /**
  * API Functions & Keys for cache management
@@ -36,5 +55,22 @@ export const api = {
       fn: getEvents,
     },
   },
-  post: {},
+  post: {
+    rsvp: {
+      key: "rsvp",
+      fn: postRsvpAttendee,
+    },
+    createEvent: {
+      key: "createEvent",
+      fn: postEvent,
+    },
+    confirmRsvp: {
+      key: "confirmRsvp",
+      fn: postConfirmRsvp,
+    },
+    removeEvent: {
+      key: "removeEvent",
+      fn: postRemoveEvent,
+    },
+  },
 };
