@@ -13,14 +13,14 @@
   let showCreateModal = $state(false);
 
   const query = queries.getEvents();
-  const myEventsQuery = queries.getMyEvents(
-    $walletStore.walletAddress as string,
+  const myEventsQuery = $derived(
+    queries.getMyEvents($walletStore.walletAddress),
   );
 
   $effect(() => {
-    if (!!$walletStore.walletAddress) {
-      $myEventsQuery.refetch();
-    }
+    if (!$walletStore.walletAddress || $walletStore.walletAddress === null)
+      return console.error("no address");
+    $myEventsQuery.refetch();
   });
 
   onMount(async () => {
