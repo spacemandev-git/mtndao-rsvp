@@ -45,7 +45,7 @@
     const payload = {
       ...newEvent,
       name: eventNameWithUUID,
-      lamports: (price * 1e8).toString(),
+      lamports: Math.round(price * 1e8).toString(),
     };
     $mutate.mutate(payload, { onSuccess });
   }
