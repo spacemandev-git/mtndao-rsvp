@@ -97,7 +97,18 @@
           Manage
         </button>
       {:else if isAttending}
-        <p class="mx-auto">Reserved!</p>
+        <div class="flex flex-col">
+          <p class="mx-auto">RSVP'd!</p>
+          <p class="mx-auto text-xs text-center">
+            deposited: {parseInt(event.account.deposit, 16)}
+          </p>
+          <p class="mx-auto text-xs text-center">
+            Show your wallet address to the host!
+          </p>
+          {#if event.account.stopped}
+            <p class="mx-auto text-xs text-center">Event has ended</p>
+          {/if}
+        </div>
       {:else}
         <button
           onclick={createRsvp}
