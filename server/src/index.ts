@@ -18,9 +18,19 @@ app.get("/events", async (c) => {
 
 app.get("/events/:user", async (c) => {
     const { user } = c.req.param();
-    const rsvps = await program.account.rsvpAccount.all();
-    const userRsvps = rsvps.filter(rsvp => rsvp.account.user.toBase58() === user);
-    return c.json(userRsvps);
+    const pubkey = new PublicKey(user);
+    const rsvps = await program.account.rsvpAccount.all(
+    [
+        {
+            memcmp: {
+                offset: 8,
+                encoding: 'base58',
+                bytes: pubkey.toBase58()
+            }
+        }
+       ]
+    );
+    return c.json(rsvps);
 })
 
 app.post("/event/rsvp", async (c) => {
