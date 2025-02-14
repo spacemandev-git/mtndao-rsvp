@@ -9,6 +9,10 @@
   import { Buffer } from "buffer";
   import { mutations } from "$lib/services/apiQueries";
   import { walletStore } from "$lib/wallet/walletStore.svelte";
+  import {
+    prepareSignedTransaction,
+    signTransaction,
+  } from "$lib/wallet/helpers/sign-transaction";
 
   let {
     event,
@@ -21,58 +25,26 @@
   let activeTab = $state<"details" | "scanner">("scanner");
 
   let solanaAddress = $state("");
-  let tx: VersionedTransaction | undefined = $state(undefined);
-
   const mutate = mutations.confirmRsvp();
 
   async function confirmRsvp(action: "burn" | "confirm") {
     if (!$walletStore.walletAddress)
       return console.error("Wallet not connected");
-    $mutate.mutate({
+
+    async function onSuccess(response: { msg: string }) {
+      const tx = prepareSignedTransaction(response.msg);
+      await signTransaction(tx);
+      onClose();
+    }
+
+    const payload = {
       event: event.publicKey,
       attendee: solanaAddress,
       burn: action === "burn",
       admin: $walletStore.walletAddress,
-    });
+    };
 
-    const response = $mutate.data;
-
-    console.log({ response });
-
-    const deserializedMsg = VersionedMessage.deserialize(
-      Uint8Array.from(Buffer.from(response.msg, "base64")),
-    );
-
-    tx = new VersionedTransaction(deserializedMsg);
-
-    // onClose();
-  }
-
-  async function signTransaction() {
-    const connection = new Connection(
-      "https://nerissa-3i7at8-fast-mainnet.helius-rpc.com/",
-    );
-
-    if (!tx) return console.error("No transaction provided");
-
-    const wallet = window.solana;
-    if (!wallet) return console.error("Wallet not connected");
-
-    try {
-      console.log("Transaction before signing:", tx);
-
-      // Request signature from the wallet
-      const signedTx = await (wallet as any).signTransaction(tx);
-      console.log("Signed transaction:", signedTx);
-
-      // Send the transaction
-      const txId = await connection.sendRawTransaction(signedTx.serialize());
-      console.log("Transaction ID:", txId);
-
-      return txId;
-    } catch (err) {
-      console.error("Transaction signing error:", err);
-    }
+    $mutate.mutate(payload, { onSuccess });
   }
 </script>
 
