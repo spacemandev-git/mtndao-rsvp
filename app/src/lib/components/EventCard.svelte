@@ -100,7 +100,7 @@
         <div class="flex flex-col">
           <p class="mx-auto">RSVP'd!</p>
           <p class="mx-auto text-xs text-center">
-            deposited: {parseInt(event.account.deposit, 16)}
+            deposited: {parseInt(event.account.deposit, 16) / 1e8} SOL
           </p>
           <p class="mx-auto text-xs text-center">
             Show your wallet address to the host!
