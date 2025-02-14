@@ -4,7 +4,7 @@ import { Hono } from "hono";
 import idl from "../program/rsvp.json";
 import { type Rsvp as RSVPTypes} from "../program/rsvp.ts"
 const app = new Hono();
-const connection = new Connection(process.env.RPC_URL!);
+const connection = new Connection(process.env.RPC_URL!, "confirmed");
 const program = new Program<RSVPTypes>(idl as RSVPTypes, {connection});
 
 app.get("/", (c) => c.text("MTNDAO RSVP API"));
@@ -19,8 +19,6 @@ app.get("/events", async (c) => {
 app.get("/events/:user", async (c) => {
     const { user } = c.req.param();
     const pubkey = new PublicKey(user);
-    console.log({pubkey: pubkey.toBase58()})
-    console.log(await program.account.rsvpAccount.all())
     const rsvps = await program.account.rsvpAccount.all(
     [
         {
@@ -38,7 +36,6 @@ app.get("/events/:user", async (c) => {
 app.post("/event/rsvp", async (c) => {
     try {
         const { event, address } = await c.req.json();
-        console.log({event, address});
         const rsvpIx = await program.methods.rsvp()
             .accounts({
                 user: new PublicKey(address),
