@@ -9,11 +9,11 @@ export type EventType = {
 };
 
 export type EventResponse = {
-    publicKey: string;
-    account: {
-      admin: string;
-      stopped: boolean;
-      eventName: string;
-      deposit: string; 
-    }
-  }
+  publicKey: string;
+  account: {
+    admin: string;
+    stopped: boolean;
+    eventName: string;
+    deposit: string;
+  };
+};

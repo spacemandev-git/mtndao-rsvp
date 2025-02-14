@@ -11,11 +11,13 @@ async function getEvents() {
   return res.data as EventResponse[];
 }
 
+async function getMyEvents(address: string) {
+  const res = await apiClient.get(`/events/${address}`);
+  return res.data;
+}
+
 // RSVP to an event as an attendee
-async function postRsvpAttendee(params: {
-  event: string;
-  address: string;
-}) {
+async function postRsvpAttendee(params: { event: string; address: string }) {
   const res = await apiClient.post(`/event/rsvp`, params);
   return res.data;
 }
@@ -28,7 +30,6 @@ async function postEvent(params: {
   admin: string;
 }) {
   const res = await apiClient.post(`/event/create`, params);
-  console.log('post event', res.data)
   return res.data;
 }
 
@@ -36,7 +37,7 @@ async function postEvent(params: {
 async function postConfirmRsvp(params: {
   event: string;
   attendee: string;
-  burn: boolean
+  burn: boolean;
   admin: string;
 }) {
   const res = await apiClient.post(`/event/confirm`, params);
@@ -57,6 +58,11 @@ export const api = {
     getEvents: {
       key: "events",
       fn: getEvents,
+    },
+
+    getMyEvents: {
+      key: "my-events",
+      fn: getMyEvents,
     },
   },
   post: {

@@ -8,6 +8,13 @@ const queryGetEvents = () =>
     queryFn: api.fetch.getEvents.fn,
   });
 
+const queryGetMyEvents = (address?: string | null) =>
+  createQuery({
+    queryKey: [api.fetch.getMyEvents.key],
+    queryFn: () => api.fetch.getMyEvents.fn(address as string),
+    enabled: !!address && address !== null,
+  });
+
 // Mutations
 const mutationCreateEvent = () =>
   createMutation({
@@ -35,6 +42,7 @@ const mutationRemoveEvent = () =>
 
 export const queries = {
   getEvents: queryGetEvents,
+  getMyEvents: queryGetMyEvents,
 };
 
 export const mutations = {
