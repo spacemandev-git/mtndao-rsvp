@@ -19,6 +19,8 @@ app.get("/events", async (c) => {
 app.get("/events/:user", async (c) => {
     const { user } = c.req.param();
     const pubkey = new PublicKey(user);
+    console.log({pubkey: pubkey.toBase58()})
+    console.log(await program.account.rsvpAccount.all())
     const rsvps = await program.account.rsvpAccount.all(
     [
         {
@@ -36,7 +38,7 @@ app.get("/events/:user", async (c) => {
 app.post("/event/rsvp", async (c) => {
     try {
         const { event, address } = await c.req.json();
-
+        console.log({event, address});
         const rsvpIx = await program.methods.rsvp()
             .accounts({
                 user: new PublicKey(address),

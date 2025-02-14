@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("9NcPsTLoE4PVSgNTHQdHNYbUHKtXDaPnniC8doNTYj3g");
+declare_id!("31CP2WABMdSAKCnMkPRU1XcYm43mTYUJyZZFewAZSr33");
 
 #[program]
 pub mod rsvp {
@@ -21,6 +21,9 @@ pub mod rsvp {
         if ctx.accounts.event.stopped {
             return Err(ErrorCode::EventStopped.into());
         }
+
+        ctx.accounts.rsvp_account.user = ctx.accounts.user.key();
+        ctx.accounts.rsvp_account.event = ctx.accounts.event.key();
 
         transfer(
             CpiContext::new(
