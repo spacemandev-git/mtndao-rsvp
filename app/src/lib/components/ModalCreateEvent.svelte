@@ -40,7 +40,13 @@
       onClose();
     }
 
-    const payload = { ...newEvent, lamports: (price * 1e8).toString() };
+    const uuid = crypto.randomUUID();
+    const eventNameWithUUID = `${newEvent.name}--${uuid}`;
+    const payload = {
+      ...newEvent,
+      name: eventNameWithUUID,
+      lamports: (price * 1e8).toString(),
+    };
     $mutate.mutate(payload, { onSuccess });
   }
 </script>
@@ -52,7 +58,6 @@
     <h2 class="text-xl font-bold mb-4">Create New Event</h2>
 
     <form class="space-y-4" onsubmit={createEvent}>
-      <!-- Title -->
       <div>
         <label for="title" class="block text-sm font-medium text-gray-700 mb-1">
           Title
