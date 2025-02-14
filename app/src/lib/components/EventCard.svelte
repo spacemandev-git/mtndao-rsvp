@@ -8,6 +8,9 @@
     prepareSignedTransaction,
     signTransaction,
   } from "$lib/wallet/helpers/sign-transaction";
+  import { useQueryClient } from "@tanstack/svelte-query";
+  import { api } from "$lib/services/apiClient";
+  import toast from "svelte-french-toast";
 
   let {
     event,
@@ -19,13 +22,27 @@
 
   const mutate = mutations.rsvpEvent();
 
+  const queryClient = useQueryClient();
   async function createRsvp() {
     if (!$walletStore.walletAddress)
       return console.error("Wallet not connected");
 
     async function onSuccess(response: { msg: string }) {
       const tx = prepareSignedTransaction(response.msg);
-      await signTransaction(tx);
+      const result = await signTransaction(tx);
+
+      if (result) {
+        setTimeout(() => {
+          queryClient.invalidateQueries({
+            queryKey: [api.fetch.getMyEvents.key],
+          });
+        }, 1000);
+        toast.loading(
+          "Reserved! Wait a few seconds for onchain confirmation (or refresh manually)",
+          { duration: 1100 },
+        );
+      }
+
       onClose();
     }
 
