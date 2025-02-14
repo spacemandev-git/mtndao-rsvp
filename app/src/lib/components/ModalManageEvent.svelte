@@ -22,7 +22,7 @@
     onClose(): void;
   } = $props();
 
-  let activeTab = $state<"details" | "scanner">("scanner");
+  let confirmBurn = $state(false);
 
   let solanaAddress = $state("");
 
@@ -80,14 +80,33 @@
           >
             Confirm
           </button>
-          <button
-            class="bg-red-100 py-2 px-4 rounded w-full"
-            onclick={() => confirmRsvp("burn")}
-          >
-            Burn
-          </button>
         </div>
       </div>
+      {#if confirmBurn}
+        <div class="flex flex-col items-center gap-2">
+          <button
+            class="mt-3 bg-red-100 py-2 px-4 rounded w-full"
+            onclick={() => confirmRsvp("burn")}
+          >
+            Are you Sure? Confirm Burn
+          </button>
+          <button
+            class="bg-gray-100 py-2 px-4 rounded w-full"
+            onclick={() => {
+              confirmBurn = false;
+            }}
+          >
+            Cancel
+          </button>
+        </div>
+      {:else}
+        <button
+          class="mt-3 bg-red-100 py-2 px-4 rounded w-full"
+          onclick={() => (confirmBurn = true)}
+        >
+          End Event - Burn all unattended
+        </button>
+      {/if}
     </div>
   </div>
 </div>

@@ -6,6 +6,9 @@
     prepareSignedTransaction,
     signTransaction,
   } from "$lib/wallet/helpers/sign-transaction";
+  import toast from "svelte-french-toast";
+  import { useQueryClient } from "@tanstack/svelte-query";
+  import { api } from "$lib/services/apiClient";
 
   let {
     onClose = () => {},
@@ -30,13 +33,27 @@
 
   const mutate = mutations.createEvent();
 
+  const queryClient = useQueryClient();
   async function createEvent() {
     if (!$walletStore.walletAddress)
       return console.error("Wallet not connected");
 
     async function onSuccess(response: { event: string; msg: string }) {
       tx = prepareSignedTransaction(response.msg);
-      await signTransaction(tx);
+      const result = await signTransaction(tx);
+
+      if (result) {
+        setTimeout(() => {
+          queryClient.invalidateQueries({
+            queryKey: [api.fetch.getEvents.key],
+          });
+        }, 1000);
+        toast.loading(
+          "Event created! Wait a few seconds for onchain confirmation (or refresh manually)",
+          { duration: 1100 },
+        );
+      }
+
       onClose();
     }
 
@@ -45,7 +62,7 @@
     const payload = {
       ...newEvent,
       name: eventNameWithUUID,
-      lamports: (price * 1e8).toString(),
+      lamports: Math.round(price * 1e8).toString(),
     };
     $mutate.mutate(payload, { onSuccess });
   }

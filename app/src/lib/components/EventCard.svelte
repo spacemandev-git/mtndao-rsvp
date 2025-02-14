@@ -8,22 +8,41 @@
     prepareSignedTransaction,
     signTransaction,
   } from "$lib/wallet/helpers/sign-transaction";
+  import { useQueryClient } from "@tanstack/svelte-query";
+  import { api } from "$lib/services/apiClient";
+  import toast from "svelte-french-toast";
 
   let {
     event,
+    isAttending,
   }: {
     event: EventResponse;
+    isAttending: boolean;
   } = $props();
 
   const mutate = mutations.rsvpEvent();
 
+  const queryClient = useQueryClient();
   async function createRsvp() {
     if (!$walletStore.walletAddress)
       return console.error("Wallet not connected");
 
     async function onSuccess(response: { msg: string }) {
       const tx = prepareSignedTransaction(response.msg);
-      await signTransaction(tx);
+      const result = await signTransaction(tx);
+
+      if (result) {
+        setTimeout(() => {
+          queryClient.invalidateQueries({
+            queryKey: [api.fetch.getMyEvents.key],
+          });
+        }, 1000);
+        toast.loading(
+          "Reserved! Wait a few seconds for onchain confirmation (or refresh manually)",
+          { duration: 1100 },
+        );
+      }
+
       onClose();
     }
 
@@ -47,21 +66,28 @@
     isOpen = false;
   }
 
-  const eventName = $derived(event.account.eventName.split("--")[0]);
-  const emojis = $derived(uuidToEmojis(event.account.eventName.split("--")[1]));
+  const [name, uuid] = $derived(event.account.eventName.split("--"));
+  const eventName = $derived(name);
+  const emojis = $derived(uuidToEmojis(uuid)); // show unique record identity
 </script>
 
 {#if isOpen}
   <ModalManageEvent {event} {onClose} />
 {/if}
 
+<!-- TODO: make card diff color if attending -->
 <div
-  class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+  class={`${isAttending ? "bg-green-100" : "bg-white"} rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300`}
 >
   <div class="p-4 sm:p-6">
-    <h2 class="text-xl font-semibold mb-2">
-      {eventName}
-    </h2>
+    <div class="flex justify-between">
+      <h2 class="text-xl font-semibold mb-2">
+        {eventName}
+      </h2>
+      {#await emojis then emojiCode}
+        <span class="opacity-20"> {emojiCode} </span>
+      {/await}
+    </div>
     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
       {#if isCreator}
         <button
@@ -70,6 +96,19 @@
         >
           Manage
         </button>
+      {:else if isAttending}
+        <div class="flex flex-col">
+          <p class="mx-auto">RSVP'd!</p>
+          <p class="mx-auto text-xs text-center">
+            deposited: {parseInt(event.account.deposit, 16) / 1e8} SOL
+          </p>
+          <p class="mx-auto text-xs text-center">
+            Show your wallet address to the host!
+          </p>
+          {#if event.account.stopped}
+            <p class="mx-auto text-xs text-center">Event has ended</p>
+          {/if}
+        </div>
       {:else}
         <button
           onclick={createRsvp}

@@ -46,14 +46,6 @@
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-4xl font-bold text-center mb-8">Upcoming Events</h1>
 
-    <span>
-      my attendance:
-      {$myEventsQuery.status}
-      {#if $myEventsQuery.isSuccess}
-        {JSON.stringify($myEventsQuery.data)}
-      {/if}
-    </span>
-
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {#if $query.isLoading}
         <p>Loading...</p>
@@ -62,7 +54,10 @@
       {:else if $query.isSuccess}
         {@const myAttendance = $myEventsQuery.data}
         {#each $query.data as event (event.publicKey)}
-          <EventCard {event} />
+          {@const isAttending = myAttendance?.find(
+            (a: any) => a.account.event === event.publicKey,
+          )}
+          <EventCard {event} {isAttending} />
         {/each}
       {/if}
     </div>

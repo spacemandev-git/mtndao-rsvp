@@ -1,5 +1,11 @@
 import { api } from "$lib/services/apiClient";
-import { createMutation, createQuery } from "@tanstack/svelte-query";
+import {
+  createMutation,
+  createQuery,
+  QueryClient,
+  QueryClientProvider,
+  useQueryClient,
+} from "@tanstack/svelte-query";
 
 // Queries
 const queryGetEvents = () =>
