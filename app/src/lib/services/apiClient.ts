@@ -11,6 +11,11 @@ async function getEvents() {
   return res.data as EventResponse[];
 }
 
+async function getMyEvents(address: string) {
+  const res = await apiClient.get(`/events/${address}`);
+  return res.data;
+}
+
 // RSVP to an event as an attendee
 async function postRsvpAttendee(params: { event: string; address: string }) {
   const res = await apiClient.post(`/event/rsvp`, params);
@@ -53,6 +58,11 @@ export const api = {
     getEvents: {
       key: "events",
       fn: getEvents,
+    },
+
+    getMyEvents: {
+      key: "my-events",
+      fn: getMyEvents,
     },
   },
   post: {

@@ -41,7 +41,7 @@
     }
 
     const uuid = crypto.randomUUID();
-    const eventNameWithUUID = `${newEvent.name}--${uuid}`;
+    const eventNameWithUUID = `${newEvent.name}--${uuid.slice(0, 4)}`;
     const payload = {
       ...newEvent,
       name: eventNameWithUUID,
