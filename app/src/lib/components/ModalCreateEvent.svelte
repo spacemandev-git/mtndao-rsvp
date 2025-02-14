@@ -1,14 +1,5 @@
 <script lang="ts">
-  import type { EventType } from "$lib/types";
-  import {
-    Connection,
-    PublicKey,
-    Transaction,
-    VersionedMessage,
-    VersionedTransaction,
-    sendAndConfirmTransaction,
-  } from "@solana/web3.js";
-  import { Buffer } from "buffer";
+  import { VersionedTransaction } from "@solana/web3.js";
   import { mutations } from "$lib/services/apiQueries";
   import { walletStore } from "$lib/wallet/walletStore.svelte";
   import {
@@ -22,7 +13,7 @@
     onClose?(): void;
   } = $props();
 
-  let price = $state(1);
+  let price = $state(0.01);
   let tx: VersionedTransaction | undefined = $state(undefined);
 
   let newEvent = $state<{
@@ -49,11 +40,7 @@
       onClose();
     }
 
-    const payload = {
-      ...newEvent,
-      lamports: (price * 1e8).toString(),
-    };
-
+    const payload = { ...newEvent, lamports: (price * 1e8).toString() };
     $mutate.mutate(payload, { onSuccess });
   }
 </script>
