@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/rsvp.json`.
  */
 export type Rsvp = {
-  "address": "31CP2WABMdSAKCnMkPRU1XcYm43mTYUJyZZFewAZSr33",
+  "address": "8EP4SzCHbayG7y4HukF1dCjPLY3Ytud2QmmYeHaBHjga",
   "metadata": {
     "name": "rsvp",
     "version": "0.1.0",

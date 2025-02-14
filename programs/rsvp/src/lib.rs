@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("31CP2WABMdSAKCnMkPRU1XcYm43mTYUJyZZFewAZSr33");
+declare_id!("8EP4SzCHbayG7y4HukF1dCjPLY3Ytud2QmmYeHaBHjga");
 
 #[program]
 pub mod rsvp {
@@ -41,24 +41,36 @@ pub mod rsvp {
     pub fn confirm_rsvp(ctx: Context<ConfirmRSVP>, _evt_name: String, burn: bool) -> Result<()> {
         if burn {
             transfer(
-                CpiContext::new(
+                CpiContext::new_with_signer(
                     ctx.accounts.system_program.to_account_info(),
                     Transfer {
                         from: ctx.accounts.event.to_account_info(),
                         to: ctx.accounts.admin.to_account_info(),
                     },
+                    &[&[
+                        b"event",
+                        ctx.accounts.admin.key().as_ref(),
+                        ctx.accounts.event.event_name.as_ref(),
+                        &[ctx.bumps.event],
+                    ]],
                 ),
                 ctx.accounts.event.deposit,
             )?;
         } else {
             // Transfer from event to user
             transfer(
-                CpiContext::new(
+                CpiContext::new_with_signer(
                     ctx.accounts.system_program.to_account_info(),
                     Transfer {
                         from: ctx.accounts.event.to_account_info(),
                         to: ctx.accounts.user.to_account_info(),
                     },
+                    &[&[
+                        b"event",
+                        ctx.accounts.admin.key().as_ref(),
+                        ctx.accounts.event.event_name.as_ref(),
+                        &[ctx.bumps.event],
+                    ]],
                 ),
                 ctx.accounts.event.deposit,
             )?;
