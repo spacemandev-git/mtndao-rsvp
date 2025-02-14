@@ -49,8 +49,9 @@
     isOpen = false;
   }
 
-  const eventName = $derived(event.account.eventName.split("--")[0]);
-  const emojis = $derived(uuidToEmojis(event.account.eventName.split("--")[1]));
+  const [name, uuid] = $derived(event.account.eventName.split("--"));
+  const eventName = $derived(name);
+  const emojis = $derived(uuidToEmojis(uuid)); // show unique record identity
 </script>
 
 {#if isOpen}
@@ -62,9 +63,14 @@
   class={`${isAttending ? "bg-green-100" : "bg-white"} rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300`}
 >
   <div class="p-4 sm:p-6">
-    <h2 class="text-xl font-semibold mb-2">
-      {eventName}
-    </h2>
+    <div class="flex justify-between">
+      <h2 class="text-xl font-semibold mb-2">
+        {eventName}
+      </h2>
+      {#await emojis then emojiCode}
+        <span class="opacity-20"> {emojiCode} </span>
+      {/await}
+    </div>
     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
       {#if isCreator}
         <button
