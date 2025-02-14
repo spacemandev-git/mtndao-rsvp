@@ -11,8 +11,10 @@
 
   let {
     event,
+    isAttending,
   }: {
     event: EventResponse;
+    isAttending: boolean;
   } = $props();
 
   const mutate = mutations.rsvpEvent();
@@ -55,8 +57,9 @@
   <ModalManageEvent {event} {onClose} />
 {/if}
 
+<!-- TODO: make card diff color if attending -->
 <div
-  class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+  class={`${isAttending ? "bg-green-100" : "bg-white"} rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300`}
 >
   <div class="p-4 sm:p-6">
     <h2 class="text-xl font-semibold mb-2">
@@ -70,6 +73,8 @@
         >
           Manage
         </button>
+      {:else if isAttending}
+        <p class="mx-auto">Reserved!</p>
       {:else}
         <button
           onclick={createRsvp}

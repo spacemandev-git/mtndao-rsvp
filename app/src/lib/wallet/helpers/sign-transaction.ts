@@ -15,6 +15,7 @@ export function prepareSignedTransaction(msg: string) {
 export async function signTransaction(tx: VersionedTransaction) {
   const connection = new Connection(
     "https://nerissa-3i7at8-fast-mainnet.helius-rpc.com/",
+    "confirmed",
   );
 
   if (!tx) return console.error("No transaction provided");
