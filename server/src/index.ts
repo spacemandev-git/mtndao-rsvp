@@ -1,6 +1,7 @@
 import { BN, Program } from "@coral-xyz/anchor";
 import { ComputeBudgetProgram, Connection, PublicKey, TransactionMessage } from "@solana/web3.js";
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import idl from "../program/rsvp.json";
 import { type Rsvp as RSVPTypes} from "../program/rsvp.ts"
 const app = new Hono();
@@ -8,6 +9,9 @@ const connection = new Connection(process.env.RPC_URL!, "confirmed");
 const program = new Program<RSVPTypes>(idl as RSVPTypes, {connection});
 
 app.get("/", (c) => c.text("MTNDAO RSVP API"));
+
+// CORS
+app.use("*", cors());
 
 // PUBLIC
 // TODO: Do a GPA for events
