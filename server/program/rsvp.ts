@@ -57,6 +57,39 @@ export type Rsvp = {
           }
         },
         {
+          "name": "eventWallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  118,
+                  101,
+                  110,
+                  116,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin"
+              },
+              {
+                "kind": "account",
+                "path": "event"
+              }
+            ]
+          }
+        },
+        {
           "name": "rsvpAccount",
           "writable": true
         },
@@ -127,6 +160,39 @@ export type Rsvp = {
               }
             ]
           }
+        },
+        {
+          "name": "eventWallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  118,
+                  101,
+                  110,
+                  116,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin"
+              },
+              {
+                "kind": "account",
+                "path": "event"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -160,6 +226,10 @@ export type Rsvp = {
         },
         {
           "name": "event",
+          "writable": true
+        },
+        {
+          "name": "eventWallet",
           "writable": true
         },
         {
@@ -257,6 +327,19 @@ export type Rsvp = {
       ]
     },
     {
+      "name": "eventWallet",
+      "discriminator": [
+        151,
+        0,
+        234,
+        197,
+        242,
+        225,
+        172,
+        57
+      ]
+    },
+    {
       "name": "rsvpAccount",
       "discriminator": [
         40,
@@ -298,6 +381,10 @@ export type Rsvp = {
           {
             "name": "deposit",
             "type": "u64"
+          },
+          {
+            "name": "eventWallet",
+            "type": "pubkey"
           }
         ]
       }
@@ -316,6 +403,13 @@ export type Rsvp = {
             "type": "u64"
           }
         ]
+      }
+    },
+    {
+      "name": "eventWallet",
+      "type": {
+        "kind": "struct",
+        "fields": []
       }
     },
     {

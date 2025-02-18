@@ -36,10 +36,18 @@ app.get("/events/:user", async (c) => {
 app.post("/event/rsvp", async (c) => {
     try {
         const { event, address } = await c.req.json();
+        const eventWallet = PublicKey.findProgramAddressSync(
+            [
+                Buffer.from("event_wallet"),
+                new PublicKey(address).toBytes(),
+                new PublicKey(event).toBytes()
+            ],
+            program.programId)[0];
         const rsvpIx = await program.methods.rsvp()
             .accounts({
                 user: new PublicKey(address),
                 event: new PublicKey(event),
+                eventWallet: eventWallet,
             })
             .instruction();
     

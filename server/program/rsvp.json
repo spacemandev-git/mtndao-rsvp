@@ -51,6 +51,39 @@
           }
         },
         {
+          "name": "event_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  118,
+                  101,
+                  110,
+                  116,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin"
+              },
+              {
+                "kind": "account",
+                "path": "event"
+              }
+            ]
+          }
+        },
+        {
           "name": "rsvp_account",
           "writable": true
         },
@@ -121,6 +154,39 @@
               }
             ]
           }
+        },
+        {
+          "name": "event_wallet",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  118,
+                  101,
+                  110,
+                  116,
+                  95,
+                  119,
+                  97,
+                  108,
+                  108,
+                  101,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin"
+              },
+              {
+                "kind": "account",
+                "path": "event"
+              }
+            ]
+          }
         }
       ],
       "args": [
@@ -154,6 +220,10 @@
         },
         {
           "name": "event",
+          "writable": true
+        },
+        {
+          "name": "event_wallet",
           "writable": true
         },
         {
@@ -251,6 +321,19 @@
       ]
     },
     {
+      "name": "EventWallet",
+      "discriminator": [
+        151,
+        0,
+        234,
+        197,
+        242,
+        225,
+        172,
+        57
+      ]
+    },
+    {
       "name": "RSVPAccount",
       "discriminator": [
         40,
@@ -292,6 +375,10 @@
           {
             "name": "deposit",
             "type": "u64"
+          },
+          {
+            "name": "event_wallet",
+            "type": "pubkey"
           }
         ]
       }
@@ -310,6 +397,13 @@
             "type": "u64"
           }
         ]
+      }
+    },
+    {
+      "name": "EventWallet",
+      "type": {
+        "kind": "struct",
+        "fields": []
       }
     },
     {

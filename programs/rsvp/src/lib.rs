@@ -14,6 +14,7 @@ pub mod rsvp {
         event.event_name = args.event_name;
         event.deposit = args.deposit;
         event.stopped = false;
+        event.event_wallet = ctx.accounts.event_wallet.key();
         Ok(())
     }
 
@@ -30,7 +31,7 @@ pub mod rsvp {
                 ctx.accounts.system_program.to_account_info(),
                 Transfer {
                     from: ctx.accounts.user.to_account_info(),
-                    to: ctx.accounts.event.to_account_info(),
+                    to: ctx.accounts.event_wallet.to_account_info(),
                 },
             ),
             ctx.accounts.event.deposit, // txn fee for withdraw
@@ -44,14 +45,14 @@ pub mod rsvp {
                 CpiContext::new_with_signer(
                     ctx.accounts.system_program.to_account_info(),
                     Transfer {
-                        from: ctx.accounts.event.to_account_info(),
+                        from: ctx.accounts.event_wallet.to_account_info(),
                         to: ctx.accounts.admin.to_account_info(),
                     },
                     &[&[
-                        b"event",
+                        b"event_wallet",
                         ctx.accounts.admin.key().as_ref(),
-                        ctx.accounts.event.event_name.as_ref(),
-                        &[ctx.bumps.event],
+                        ctx.accounts.event.key().as_ref(),
+                        &[ctx.bumps.event_wallet],
                     ]],
                 ),
                 ctx.accounts.event.deposit,
@@ -62,14 +63,14 @@ pub mod rsvp {
                 CpiContext::new_with_signer(
                     ctx.accounts.system_program.to_account_info(),
                     Transfer {
-                        from: ctx.accounts.event.to_account_info(),
+                        from: ctx.accounts.event_wallet.to_account_info(),
                         to: ctx.accounts.user.to_account_info(),
                     },
                     &[&[
-                        b"event",
+                        b"event_wallet",
                         ctx.accounts.admin.key().as_ref(),
-                        ctx.accounts.event.event_name.as_ref(),
-                        &[ctx.bumps.event],
+                        ctx.accounts.event.key().as_ref(),
+                        &[ctx.bumps.event_wallet],
                     ]],
                 ),
                 ctx.accounts.event.deposit,
@@ -105,6 +106,7 @@ pub struct Event {
     #[max_len(128)]
     pub event_name: String,
     pub deposit: u64, //lamports
+    pub event_wallet: Pubkey,
 }
 
 #[account]
@@ -113,6 +115,10 @@ pub struct RSVPAccount {
     pub user: Pubkey,
     pub event: Pubkey,
 }
+
+#[account]
+#[derive(InitSpace)]
+pub struct EventWallet {} // CANNOT HOLD ANY DATA
 
 #[derive(Accounts)]
 #[instruction(args: EventArgs)]
@@ -128,14 +134,27 @@ pub struct InitEvent<'info> {
         bump,
     )]
     pub event: Account<'info, Event>,
+    #[account(
+        init,
+        payer = admin,
+        space = 8+EventWallet::INIT_SPACE,
+        seeds = [b"event_wallet".as_ref(), admin.key().as_ref(), event.key().as_ref()],
+        bump,
+    )]
+    pub event_wallet: Account<'info, EventWallet>,
 }
 
 #[derive(Accounts)]
 pub struct RSVP<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
-    #[account(mut)]
+    #[account(
+        mut,
+        constraint = event.event_wallet == event_wallet.key(),
+    )]
     pub event: Account<'info, Event>,
+    #[account(mut)]
+    pub event_wallet: Account<'info, EventWallet>,
     pub system_program: Program<'info, System>,
     #[account(
         init,
@@ -153,10 +172,19 @@ pub struct ConfirmRSVP<'info> {
     pub admin: Signer<'info>,
     #[account(
         mut,
+        constraint = event.admin == admin.key(), 
+        constraint = event.event_wallet == event_wallet.key(),
         seeds = [b"event".as_ref(), admin.key().as_ref(), evt_name.as_ref()],
         bump,
     )]
     pub event: Account<'info, Event>,
+    #[account(
+        mut,
+        constraint = event.event_wallet == event_wallet.key(),
+        seeds = [b"event_wallet".as_ref(), admin.key().as_ref(), event.key().as_ref()],
+        bump,
+    )]
+    pub event_wallet: Account<'info, EventWallet>,
     #[account(
         mut,
         close = user
