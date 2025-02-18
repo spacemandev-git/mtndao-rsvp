@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("3WMmPtNrkZBPuv2vBdnse7zx2zYdurGXqEva4qDGJe4G");
+declare_id!("Ei8XbEGVUgyHCDSfTe8VCd8hVBXR89gxaZfPZThmiaCH");
 
 #[program]
 pub mod rsvp {
@@ -15,6 +15,19 @@ pub mod rsvp {
         event.deposit = args.deposit;
         event.stopped = false;
         event.event_wallet = ctx.accounts.event_wallet.key();
+
+        // Makes sure that the Event Wallet has enough SOL for Rent
+        transfer(
+            CpiContext::new(
+                ctx.accounts.system_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.admin.to_account_info(),
+                    to: ctx.accounts.event_wallet.to_account_info(),
+                },
+            ),
+            1000000,
+        )?;
+
         Ok(())
     }
 
