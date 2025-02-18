@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . /app
 
 RUN bun install
-RUN bun build
+RUN bun run build
 
 EXPOSE 4173
 
