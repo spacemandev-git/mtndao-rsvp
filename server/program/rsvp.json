@@ -1,5 +1,5 @@
 {
-  "address": "4hVEm5SzVqB69ETGkPURGSoLf5qbcAJezDmbzQjR7Rwk",
+  "address": "EvgFfKHM3U2Gw4H8AxYRFMEZ5i5YK6NjeComxeyhzwAj",
   "metadata": {
     "name": "rsvp",
     "version": "0.1.0",
@@ -321,19 +321,6 @@
       ]
     },
     {
-      "name": "EventWallet",
-      "discriminator": [
-        151,
-        0,
-        234,
-        197,
-        242,
-        225,
-        172,
-        57
-      ]
-    },
-    {
       "name": "RSVPAccount",
       "discriminator": [
         40,
@@ -397,13 +384,6 @@
             "type": "u64"
           }
         ]
-      }
-    },
-    {
-      "name": "EventWallet",
-      "type": {
-        "kind": "struct",
-        "fields": []
       }
     },
     {

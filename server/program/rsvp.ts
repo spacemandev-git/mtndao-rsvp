@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/rsvp.json`.
  */
 export type Rsvp = {
-  "address": "4hVEm5SzVqB69ETGkPURGSoLf5qbcAJezDmbzQjR7Rwk",
+  "address": "EvgFfKHM3U2Gw4H8AxYRFMEZ5i5YK6NjeComxeyhzwAj",
   "metadata": {
     "name": "rsvp",
     "version": "0.1.0",
@@ -327,19 +327,6 @@ export type Rsvp = {
       ]
     },
     {
-      "name": "eventWallet",
-      "discriminator": [
-        151,
-        0,
-        234,
-        197,
-        242,
-        225,
-        172,
-        57
-      ]
-    },
-    {
       "name": "rsvpAccount",
       "discriminator": [
         40,
@@ -403,13 +390,6 @@ export type Rsvp = {
             "type": "u64"
           }
         ]
-      }
-    },
-    {
-      "name": "eventWallet",
-      "type": {
-        "kind": "struct",
-        "fields": []
       }
     },
     {

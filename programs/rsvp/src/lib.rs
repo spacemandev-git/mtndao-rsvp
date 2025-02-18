@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("4hVEm5SzVqB69ETGkPURGSoLf5qbcAJezDmbzQjR7Rwk");
+declare_id!("EvgFfKHM3U2Gw4H8AxYRFMEZ5i5YK6NjeComxeyhzwAj");
 
 #[program]
 pub mod rsvp {
@@ -116,10 +116,6 @@ pub struct RSVPAccount {
     pub event: Pubkey,
 }
 
-#[account]
-#[derive(InitSpace)]
-pub struct EventWallet {} // CANNOT HOLD ANY DATA
-
 #[derive(Accounts)]
 #[instruction(args: EventArgs)]
 pub struct InitEvent<'info> {
@@ -134,14 +130,13 @@ pub struct InitEvent<'info> {
         bump,
     )]
     pub event: Account<'info, Event>,
+    /// CHECK: Holds SOL
     #[account(
-        init,
-        payer = admin,
-        space = 8+EventWallet::INIT_SPACE,
+        mut,
         seeds = [b"event_wallet".as_ref(), admin.key().as_ref(), event.key().as_ref()],
         bump,
     )]
-    pub event_wallet: Account<'info, EventWallet>,
+    pub event_wallet: UncheckedAccount<'info>,
 }
 
 #[derive(Accounts)]
@@ -153,8 +148,9 @@ pub struct RSVP<'info> {
         constraint = event.event_wallet == event_wallet.key(),
     )]
     pub event: Account<'info, Event>,
+    /// CHECK: Holds SOL
     #[account(mut)]
-    pub event_wallet: Account<'info, EventWallet>,
+    pub event_wallet: UncheckedAccount<'info>,
     pub system_program: Program<'info, System>,
     #[account(
         init,
@@ -184,7 +180,8 @@ pub struct ConfirmRSVP<'info> {
         seeds = [b"event_wallet".as_ref(), admin.key().as_ref(), event.key().as_ref()],
         bump,
     )]
-    pub event_wallet: Account<'info, EventWallet>,
+    /// CHECK: Holds SOL
+    pub event_wallet: UncheckedAccount<'info>,
     #[account(
         mut,
         close = user
