@@ -2,7 +2,7 @@ import axios from "axios";
 import type { EventType, EventResponse } from "$lib/types";
 
 const apiClient = axios.create({
-  baseURL: "http://mtndao-rsvp-production.up.railway.app", // TODO: replace with env. Proxy in VITE
+  baseURL: "https://mtndao-rsvp-production.up.railway.app", // TODO: replace with env. Proxy in VITE
 });
 
 // Get all open events
