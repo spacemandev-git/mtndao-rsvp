@@ -20,7 +20,15 @@ export async function signTransaction(tx: VersionedTransaction) {
 
   if (!tx) return console.error("No transaction provided");
 
-  const wallet = window.solana || window.solflare || window.backpack;
+  let wallet: SolanaProvider | undefined = undefined;
+  if (window.solana) {
+    wallet = window.solana;
+  } else if (window.solflare) {
+    wallet = window.solflare;
+  } else if (window.backpack) {
+    wallet = window.backpack;
+  }
+
   if (!wallet) return console.error("Wallet not connected");
 
   try {

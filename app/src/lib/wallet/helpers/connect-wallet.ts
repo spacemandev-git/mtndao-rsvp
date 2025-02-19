@@ -8,7 +8,13 @@ const LOCAL_STORAGE_KEY = "rsvp-walletaddress";
 export const checkWallet = async () => {
   if (window.solana || window.solflare || window.backpack) {
     console.info("Wallet found!");
-    return window.solana || window.solflare || window.backpack;
+    if (window.solana) {
+      return window.solana;
+    } else if (window.solflare) {
+      return window.solflare;
+    } else if (window.backpack) {
+      return window.backpack;
+    }
   } else {
     console.warn("Wallet not found. Please install it.");
     toast.error("Wallet not found");
