@@ -30,12 +30,7 @@ export const connectWallet = async (connection?: Connection) => {
 	try {
 		const response = await wallet.connect();
 		
-		let walletAddress;
-		if(wallet.isSolflare) {
-			walletAddress = wallet.publicKey?.toString() ?? null;
-		} else {
-			walletAddress = response.publicKey.toString();			
-		}
+		const walletAddress = wallet.publicKey?.toString() ?? null;
 
 		if(!walletAddress) {
 			toast.error("Wallet connection failed");
