@@ -35,7 +35,6 @@
                 <button
                     onclick={async () => {
                         if (!$walletStore.walletAddress) {
-                            toast.loading("Connecting wallet...");
                             await connectWallet();
                         } else await disconnectWallet();
                     }}
