@@ -12,6 +12,8 @@ declare global {
     interface Window {
         Buffer: typeof import("buffer").Buffer;
         solana?: SolanaProvider;
+        solflare?: SolanaProvider;
+        backpack?: SolanaProvider;
     }
 
     // Defining the SolanaProvider interface
