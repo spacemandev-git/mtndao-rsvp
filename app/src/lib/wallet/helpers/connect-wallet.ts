@@ -6,7 +6,7 @@ const LOCAL_STORAGE_KEY = "rsvp-walletaddress";
 
 // Check if Phantom wallet is available
 export const checkWallet = async () => {
-  if ("solana" in window) {
+  if (window.solana) {
     console.info("Wallet found!");
     return window.solana;
   } else {
