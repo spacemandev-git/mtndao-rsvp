@@ -19,6 +19,8 @@ declare global {
     // Defining the SolanaProvider interface
     interface SolanaProvider {
         isPhantom?: boolean; // Indicates if the wallet is Phantom
+        isSolflare?: boolean; // Indicates if the wallet is Solflare
+        isBackpack?: boolean; // Indicates if the wallet is Backpack
         publicKey?: {
             toString(): string; // Returns the wallet address as a string
             toBytes(): Uint8Array; // Returns the wallet address as bytes

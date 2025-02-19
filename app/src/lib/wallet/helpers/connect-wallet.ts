@@ -29,7 +29,18 @@ export const connectWallet = async (connection?: Connection) => {
 	if (!wallet) return;
 	try {
 		const response = await wallet.connect();
-		const walletAddress = response.publicKey.toString();
+		
+		let walletAddress;
+		if(wallet.isSolflare) {
+			walletAddress = wallet.publicKey?.toString() ?? null;
+		} else {
+			walletAddress = response.publicKey.toString();			
+		}
+
+		if(!walletAddress) {
+			toast.error("Wallet connection failed");
+			throw new Error("Wallet connection failed");
+		}
 		
 		// TODO: replace this with api - rpc will be handled by backend
 		const balance = 1;
