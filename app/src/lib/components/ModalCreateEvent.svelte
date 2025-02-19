@@ -27,7 +27,7 @@
     }>({
         name: "",
         description: "",
-        lamports: 1 * 1e8,
+        lamports: 1 * 1e9,
         admin: $walletStore.walletAddress ?? "",
     });
 
@@ -64,7 +64,7 @@
         const payload = {
             ...newEvent,
             name: eventNameWithUUID,
-            lamports: Math.round(price * 1e8).toString(),
+            lamports: Math.round(price * 1e9).toString(),
         };
         $mutate.mutate(payload, { onSuccess });
     }
