@@ -46,6 +46,7 @@ export const connectWallet = async (connection?: Connection) => {
 		
 		return { walletAddress, balance };
 	} catch (error) {
+		toast.error("Wallet connection failed");
 		console.error("Wallet connection failed:", error);
 	}
 };
