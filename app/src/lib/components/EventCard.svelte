@@ -3,7 +3,6 @@
   import type { EventResponse } from "$lib/types";
   import { walletStore } from "$lib/wallet/walletStore.svelte";
   import { mutations } from "$lib/services/apiQueries";
-  import { uuidToEmojis } from "$lib/utils";
   import {
     prepareSignedTransaction,
     signTransaction,
