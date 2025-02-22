@@ -99,7 +99,6 @@
 
   const [name, uuid] = $derived(event.account.eventName.split("--"));
   const eventName = $derived(name);
-  const emojis = $derived(uuidToEmojis(uuid)); // show unique record identity
 </script>
 
 {#if isOpen}
@@ -115,9 +114,7 @@
       <h2 class="text-xl font-semibold mb-2">
         {eventName}
       </h2>
-      {#await emojis then emojiCode}
-        <span class="opacity-20"> {emojiCode} </span>
-      {/await}
+      <span class="opacity-20"> {uuid} </span>
     </div>
     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
       {#if isCreator}
