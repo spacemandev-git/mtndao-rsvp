@@ -114,7 +114,7 @@
       <h2 class="text-xl font-semibold mb-2">
         {eventName}
       </h2>
-      <span class="opacity-20"> {uuid} </span>
+      <span class="opacity-10 text-gray-500 font-mono"> {uuid} </span>
     </div>
     <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
       {#if isCreator}
