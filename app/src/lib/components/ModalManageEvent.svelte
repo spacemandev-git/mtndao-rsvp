@@ -1,12 +1,6 @@
 <script lang="ts">
   import type { EventResponse } from "$lib/types";
   import QrScanner from "./QrScanner.svelte";
-  import {
-    Connection,
-    VersionedMessage,
-    VersionedTransaction,
-  } from "@solana/web3.js";
-  import { Buffer } from "buffer";
   import { mutations } from "$lib/services/apiQueries";
   import { walletStore } from "$lib/wallet/walletStore.svelte";
   import {
