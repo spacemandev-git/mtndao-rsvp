@@ -205,7 +205,7 @@ app.post("/event/remove", async     (c) => {
                     [
                         Buffer.from("event"),
                         new PublicKey(admin).toBytes(),
-                        Buffer.from(event)
+                        Buffer.from(event.name)
                     ],
                     program.programId)[0]
             })
