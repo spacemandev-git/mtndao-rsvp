@@ -17,8 +17,7 @@ app.use("*", cors());
 // TODO: Do a GPA for events
 app.get("/events", async (c) => {
     const events = await program.account.event.all();
-    return c.json(events.filter(e => e.account.deposit.gt(new BN(1e8))));
-    //return c.json(events);
+    return c.json(events.filter(e => e.account.deposit.gt(new BN(1e8)) && !e.account.stopped));
 })
 
 app.get("/events/:user", async (c) => {
@@ -205,7 +204,7 @@ app.post("/event/remove", async     (c) => {
                     [
                         Buffer.from("event"),
                         new PublicKey(admin).toBytes(),
-                        Buffer.from(event.name)
+                        Buffer.from(account.eventName)
                     ],
                     program.programId)[0]
             })
